@@ -12,7 +12,7 @@ def get_address_info(cep):
         return None
 
 def validar_nome(nome):
-    if not re.match("^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$", nome):
+    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$", nome):
         return False
     if " " not in nome.strip():
         return False
@@ -37,7 +37,7 @@ def salvar_dados_csv(dados):
 
 def atualizar_dados_csv(cpf, dados_atualizados):
     linhas = []
-    with open("cadastros.csv", mode="r") as file):
+    with open("cadastros.csv", mode="r") as file:
         reader = csv.reader(file)
         for linha in reader:
             if linha[1] == cpf:
@@ -211,4 +211,11 @@ def main():
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Acessar Cursos":
+        exibir_cursos()
+    elif escolha == "Sair":
+        st.subheader("Obrigado por usar o sistema!")
+        st.stop()
+
+if __
+  
 
