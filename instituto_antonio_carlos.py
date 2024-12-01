@@ -42,6 +42,17 @@ def atualizar_dados_csv(cpf, dados_atualizados):
         writer = csv.writer(file)
         writer.writerows(linhas)
 
+def excluir_cadastro(cpf):
+    linhas = []
+    with open("cadastros.csv", mode="r") as file:
+        reader = csv.reader(file)
+        for linha in reader:
+            if linha[1] != cpf:
+                linhas.append(linha)
+    with open("cadastros.csv", mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerows(linhas)
+
 def criar_cadastro():
     st.header("Criar Cadastro")
     nome_completo = st.text_input("Nome Completo (deve conter apenas letras e espaço para sobrenome)")
@@ -91,6 +102,7 @@ def criar_cadastro():
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
+            st.experimental_rerun()
 
 def visualizar_alunos():
     st.header("Alunos Cadastrados")
@@ -127,10 +139,15 @@ def alterar_cadastro():
                                 dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
+                                st.experimental_rerun()
                             else:
                                 st.error("Novo CEP inválido ou não encontrado.")
                         else:
                             st.error("Dados inválidos. Verifique o CEP, o email e o número.")
+                    if st.button("Excluir Cadastro"):
+                        excluir_cadastro(cpf)
+                        st.success("Cadastro excluído com sucesso!")
+                        st.experimental_rerun()
                 else:
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
@@ -222,5 +239,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
