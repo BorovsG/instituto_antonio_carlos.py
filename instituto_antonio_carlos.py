@@ -114,7 +114,7 @@ def visualizar_alunos():
 
 def alterar_cadastro():
     st.header("Alterar Cadastro")
-    cpf = st.text_input("Digite o CPF do aluno para alterar ou excluir (apenas números, 11 dígitos)")
+    cpf = st.text_input("Digite o CPF do aluno para alterar (apenas números, 11 dígitos)")
     if validar_cpf(cpf):
         if st.button("Buscar"):
             try:
@@ -140,15 +140,26 @@ def alterar_cadastro():
                                 st.success("Cadastro atualizado com sucesso!")
                         else:
                             st.error("Dados inválidos. Verifique o CEP, o email e o número.")
-                    if st.button("Excluir Cadastro"):
-                        excluir_cadastro(cpf)
-                        st.success("Cadastro excluído com sucesso!")
                 else:
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
                 st.error("Nenhum aluno cadastrado encontrado.")
     else:
         if st.button("Buscar"):
+            st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+
+def excluir_cadastro():
+    st.header("Excluir Cadastro")
+    cpf = st.text_input("Digite o CPF do aluno para excluir (apenas números, 11 dígitos)")
+    if validar_cpf(cpf):
+        if st.button("Excluir"):
+            try:
+                excluir_cadastro(cpf)
+                st.success("Cadastro excluído com sucesso!")
+            except FileNotFoundError:
+                st.error("Nenhum aluno cadastrado encontrado.")
+    else:
+        if st.button("Excluir"):
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
 def exibir_cursos():
@@ -185,19 +196,16 @@ def exibir_cursos():
     for area, cursos_area in cursos.items():
         with st.expander(f"Área: {area}"):
             for curso, aulas in cursos_area.items():
-                with st.expander(f"Curso: {curso}"):
+                if st.button(f"Curso: {curso}"):
                     st.write("**Aulas**:")
                     for aula in aulas:
-                        st.button(aula)
+                        st.write(f"- {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
     st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
 
-    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Acessar Cursos", "Sair"]
-
-
-    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Acessar Cursos", "Sair"]
+    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Excluir Cadastro", "Acessar Cursos", "Sair"]
     escolha = st.sidebar.selectbox("Menu", menu)
 
     if escolha == "Início":
@@ -208,17 +216,20 @@ def main():
         visualizar_alunos()
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
+    elif escolha == "Excluir Cadastro":
+        excluir_cadastro()
     elif escolha == "Acessar Cursos":
         if st.session_state.get("cadastrado", False):
             exibir_cursos()
         else:
             st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
     elif escolha == "Sair":
-        st.subheader("Obrigado por usar o sistema!")
+        st.subheader("Obrigado por escolher o INSTITUTO ANTÔNIO CARLOS!")
         st.stop()
 
 if __name__ == "__main__":
     main()
+
 
 
 
