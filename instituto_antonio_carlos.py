@@ -95,7 +95,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro em erros:
+            for erro in erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
@@ -193,6 +193,9 @@ def exibir_cursos():
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
     st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
+
+    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Acessar Cursos", "Sair"]
+
 
     menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Acessar Cursos", "Sair"]
     escolha = st.sidebar.selectbox("Menu", menu)
