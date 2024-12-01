@@ -216,5 +216,4 @@ def main():
         st.subheader("Obrigado por usar o sistema!")
         st.stop()
 
-if __
-
+if __name__ == "__main__":
