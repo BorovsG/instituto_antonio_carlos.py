@@ -102,7 +102,6 @@ def criar_cadastro():
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
-            st.experimental_rerun()
 
 def visualizar_alunos():
     st.header("Alunos Cadastrados")
@@ -139,7 +138,6 @@ def alterar_cadastro():
                                 dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
-                                st.experimental_rerun()
                             else:
                                 st.error("Novo CEP inválido ou não encontrado.")
                         else:
@@ -234,11 +232,12 @@ def main():
         else:
             st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
     elif escolha == "Sair":
-        st.subheader("Obrigado por usar o sistema!")
+        st.subheader("Obrigado por escolher o INSTITUTO ANTÔNIO CARLOS!")
         st.stop()
 
 if __name__ == "__main__":
     main()
+
 
 
 
