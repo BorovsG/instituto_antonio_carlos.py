@@ -37,7 +37,7 @@ def salvar_dados_csv(dados):
 
 def atualizar_dados_csv(cpf, dados_atualizados):
     linhas = []
-    with open("cadastros.csv", mode="r") as file:
+    with open("cadastros.csv", mode="r") as file):
         reader = csv.reader(file)
         for linha in reader:
             if linha[1] == cpf:
@@ -211,5 +211,4 @@ def main():
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Acessar Cursos":
-        exibir_cursos()
-    elif escolha == "Sair
+
