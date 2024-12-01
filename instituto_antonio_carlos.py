@@ -224,7 +224,7 @@ def main():
         else:
             st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
     elif escolha == "Sair":
-        st.subheader("Obrigado por escolher o INSTITUTO ANTÔNIO CARLOS!")
+        st.subheader("Obrigado por usar o sistema!")
         st.stop()
 
 if __name__ == "__main__":
