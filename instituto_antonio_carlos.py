@@ -84,11 +84,12 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro in erros:
+            for erro em erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
             salvar_dados_csv(dados)
+            st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
 
 def visualizar_alunos():
@@ -192,10 +193,12 @@ def exibir_cursos():
             st.write(f"**Área**: {info['Área']}")
             st.write("**Aulas**:")
             for aula in info["Aulas"]:
-                st.write(f"- {aula}")
+                if st.button(aula):
+                    st.write(f"Você escolheu a aula: {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
+    st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
     menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Acessar Cursos", "Sair"]
     escolha = st.sidebar.selectbox("Menu", menu)
 
@@ -208,11 +211,15 @@ def main():
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Acessar Cursos":
-        exibir_cursos()
+        if st.session_state.get("cadastrado", False):
+            exibir_cursos()
+        else:
+            st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
     elif escolha == "Sair":
         st.subheader("Obrigado por usar o sistema!")
         st.stop()
 
 if __name__ == "__main__":
     main()
+
 
