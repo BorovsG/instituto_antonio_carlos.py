@@ -11,21 +11,15 @@ def get_address_info(cep):
     else:
         return None
 
-def validar_nome(nome):
-    if not re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$", nome):
-        return False
-    if " " not in nome.strip():
-        return False
-    return True
+def validar_nome_completo(nome_completo):
+    return re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$", nome_completo) and " " in nome_completo.strip()
 
 def validar_cpf(cpf):
     return cpf.isnumeric() and len(cpf) == 11
 
 def validar_email(email):
     padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    if re.match(padrao, email):
-        return True
-    return False
+    return bool(re.match(padrao, email))
 
 def validar_cep(cep):
     return cep.isnumeric() and len(cep) == 8
@@ -50,9 +44,8 @@ def atualizar_dados_csv(cpf, dados_atualizados):
 
 def criar_cadastro():
     st.header("Criar Cadastro")
-    nome = st.text_input("Nome (deve conter apenas letras e espaço para sobrenome)")
+    nome_completo = st.text_input("Nome Completo (deve conter apenas letras e espaço para sobrenome)")
     cpf = st.text_input("CPF (apenas números, 11 dígitos)")
-    nome_completo = st.text_input("Nome Completo")
     email = st.text_input("Email")
     cep = st.text_input("CEP (apenas números, 8 dígitos)")
 
@@ -74,24 +67,27 @@ def criar_cadastro():
         else:
             st.error("CEP deve conter apenas números e ter 8 dígitos.")
 
+    numero = st.text_input("Número")
     complemento = st.text_input("Complemento")
     
     if st.button("Enviar"):
         erros = []
-        if not validar_nome(nome):
-            erros.append("Nome deve conter apenas letras e espaço para sobrenome.")
+        if not validar_nome_completo(nome_completo):
+            erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
         if not validar_cpf(cpf):
             erros.append("CPF deve conter apenas números e ter 11 dígitos.")
         if not validar_email(email):
             erros.append("Email inválido.")
         if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
+        if not numero.isnumeric():
+            erros.append("Número deve conter apenas números.")
 
         if erros:
             for erro in erros:
                 st.error(erro)
         else:
-            dados = [nome, cpf, nome_completo, email, cep, cidade, rua, bairro, complemento]
+            dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
             salvar_dados_csv(dados)
             st.success("Cadastro realizado com sucesso!")
 
@@ -99,7 +95,7 @@ def visualizar_alunos():
     st.header("Alunos Cadastrados")
     try:
         df = pd.read_csv("cadastros.csv", header=None)
-        df.columns = ["Nome", "CPF", "Nome Completo", "Email", "CEP", "Cidade", "Rua", "Bairro", "Complemento"]
+        df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
         st.dataframe(df)
     except FileNotFoundError:
         st.error("Nenhum aluno cadastrado encontrado.")
@@ -111,27 +107,29 @@ def alterar_cadastro():
         if st.button("Buscar"):
             try:
                 df = pd.read_csv("cadastros.csv", header=None)
-                df.columns = ["Nome", "CPF", "Nome Completo", "Email", "CEP", "Cidade", "Rua", "Bairro", "Complemento"]
+                df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
                 aluno = df[df["CPF"] == cpf]
                 if not aluno.empty:
                     st.write("Cadastro Encontrado:")
                     st.write(aluno)
                     novo_cep = st.text_input("Novo CEP (apenas números, 8 dígitos)", value=aluno["CEP"].values[0])
                     novo_email = st.text_input("Novo Email", value=aluno["Email"].values[0])
+                    novo_numero = st.text_input("Novo Número", value=aluno["Número"].values[0])
+                    novo_complemento = st.text_input("Novo Complemento", value=aluno["Complemento"].values[0])
                     if st.button("Salvar Alterações"):
-                        if validar_cep(novo_cep) and validar_email(novo_email):
+                        if validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
                             endereco_info = get_address_info(novo_cep)
                             if endereco_info:
                                 cidade = endereco_info.get("localidade", "")
                                 rua = endereco_info.get("logradouro", "")
                                 bairro = endereco_info.get("bairro", "")
-                                dados_atualizados = [aluno["Nome"].values[0], cpf, aluno["Nome Completo"].values[0], novo_email, novo_cep, cidade, rua, bairro, aluno["Complemento"].values[0]]
+                                dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
                             else:
                                 st.error("Novo CEP inválido ou não encontrado.")
                         else:
-                            st.error("Dados inválidos. Verifique o CEP e o email.")
+                            st.error("Dados inválidos. Verifique o CEP, o email e o número.")
                 else:
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
@@ -187,15 +185,14 @@ def exibir_cursos():
         }
     }
     
-    curso_escolhido = st.selectbox("Escolha um curso", list(cursos.keys()))
-    if curso_escolhido:
-        curso_info = cursos[curso_escolhido]
-        st.subheader(f"CURSO: {curso_escolhido}")
-        st.write(f"**Duração**: {curso_info['Duração']}")
-        st.write(f"**Área**: {curso_info['Área']}")
-        st.write("**Aulas**:")
-        for aula in curso_info["Aulas"]:
-            st.write(f"- {aula}")
+    for curso, info in cursos.items():
+        if st.button(curso):
+            st.subheader(f"CURSO: {curso}")
+            st.write(f"**Duração**: {info['Duração']}")
+            st.write(f"**Área**: {info['Área']}")
+            st.write("**Aulas**:")
+            for aula in info["Aulas"]:
+                st.write(f"- {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -210,7 +207,7 @@ def main():
         visualizar_alunos()
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
-    elif escolha == "Acessar Cursos":
+       elif escolha == "Acessar Cursos":
         exibir_cursos()
     elif escolha == "Sair":
         st.subheader("Obrigado por usar o sistema!")
@@ -218,3 +215,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
