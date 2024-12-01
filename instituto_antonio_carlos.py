@@ -114,7 +114,7 @@ def visualizar_alunos():
 
 def alterar_cadastro():
     st.header("Alterar Cadastro")
-    cpf = st.text_input("Digite o CPF do aluno para alterar (apenas números, 11 dígitos)")
+    cpf = st.text_input("Digite o CPF do aluno para alterar ou excluir (apenas números, 11 dígitos)")
     if validar_cpf(cpf):
         if st.button("Buscar"):
             try:
@@ -138,14 +138,11 @@ def alterar_cadastro():
                                 dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
-                            else:
-                                st.error("Novo CEP inválido ou não encontrado.")
                         else:
                             st.error("Dados inválidos. Verifique o CEP, o email e o número.")
                     if st.button("Excluir Cadastro"):
                         excluir_cadastro(cpf)
                         st.success("Cadastro excluído com sucesso!")
-                        st.experimental_rerun()
                 else:
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
@@ -157,59 +154,44 @@ def alterar_cadastro():
 def exibir_cursos():
     st.header("Cursos Disponíveis")
     cursos = {
-        "Medicina": {
-            "Duração": "6 anos",
-            "Área": "Saúde",
-            "Aulas": [
+        "Saúde": {
+            "Medicina": [
                 "Anatomia Humana", "Fisiologia", "Farmacologia", "Patologia", "Clínica Médica", "Cirurgia Geral"
-            ]
-        },
-        "Análise e Desenvolvimento de Sistemas": {
-            "Duração": "3 anos",
-            "Área": "Tecnologia",
-            "Aulas": [
-                "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
-            ]
-        },
-        "Direito": {
-            "Duração": "5 anos",
-            "Área": "Ciências Humanas",
-            "Aulas": [
-                "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
-            ]
-        },
-        "Administração": {
-            "Duração": "4 anos",
-            "Área": "Ciências Sociais",
-            "Aulas": [
-                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
-            ]
-        },
-        "Odontologia": {
-            "Duração": "5 anos",
-            "Área": "Saúde",
-            "Aulas": [
+            ],
+            "Odontologia": [
                 "Anatomia Dentária", "Periodontia", "Endodontia", "Prótese Dentária", "Radiologia Odontológica", "Cirurgia Buco-maxilo-facial"
             ]
         },
-        "Psicologia": {
-            "Duração": "5 anos",
-            "Área": "Ciências Humanas",
-            "Aulas": [
+        "Tecnologia": {
+            "Análise e Desenvolvimento de Sistemas": [
+                "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
+            ]
+        },
+        "Ciências Humanas": {
+            "Direito": [
+                "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
+            ],
+            "Psicologia": [
                 "Teorias da Personalidade", "Psicologia do Desenvolvimento", "Psicopatologia", "Psicologia Social", "Neuropsicologia", "Psicoterapia"
+            ]
+        },
+        "Ciências Sociais": {
+            "Administração": [
+                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
             ]
         }
     }
     
-    for curso, info in cursos.items():
-        if st.button(curso):
-            st.subheader(f"CURSO: {curso}")
-            st.write(f"**Duração**: {info['Duração']}")
-            st.write(f"**Área**: {info['Área']}")
-            st.write("**Aulas**:")
-            for aula in info["Aulas"]:
-                if st.button(aula):
-                    st.write(f"Você escolheu a aula: {aula}")
+    for area, cursos_area in cursos.items():
+        if st.button(area):
+            st.subheader(f"Área: {area}")
+            for curso, aulas in cursos_area.items():
+                if st.button(curso):
+                    st.write(f"**Curso**: {curso}")
+                    st.write("**Aulas**:")
+                    for aula in aulas:
+                        if st.button(aula):
+                            st.write(f"Você escolheu a aula: {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -232,12 +214,12 @@ def main():
         else:
             st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
     elif escolha == "Sair":
-        st.subheader("Obrigado por escolher o INSTITUTO ANTÔNIO CARLOS!")
+        st.subheader("Obrigado por usar o sistema!")
         st.stop()
 
 if __name__ == "__main__":
     main()
-
+ 
 
 
 
