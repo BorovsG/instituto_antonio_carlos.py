@@ -95,7 +95,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro in erros:
+            for erro em erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
@@ -183,15 +183,12 @@ def exibir_cursos():
     }
     
     for area, cursos_area in cursos.items():
-        if st.button(area):
-            st.subheader(f"Área: {area}")
+        with st.expander(f"Área: {area}"):
             for curso, aulas in cursos_area.items():
-                if st.button(curso):
-                    st.write(f"**Curso**: {curso}")
+                with st.expander(f"Curso: {curso}"):
                     st.write("**Aulas**:")
                     for aula in aulas:
-                        if st.button(aula):
-                            st.write(f"Você escolheu a aula: {aula}")
+                        st.button(aula)
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -219,7 +216,7 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
+
 
 
 
