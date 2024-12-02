@@ -116,7 +116,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro in erros:
+            for erro em erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, numero, complemento]
@@ -193,7 +193,7 @@ def alterar_cadastro():
                 erros.append("Número deve conter apenas números.")
 
             if erros:
-                for erro in erros:
+                for erro em erros:
                     st.error(erro)
             else:
                 if novo_cep != dados_aluno["CEP"]:
@@ -214,6 +214,7 @@ def alterar_cadastro():
                 atualizar_dados_csv(cpf, dados_atualizados)
                 st.success("Cadastro atualizado com sucesso!")
                 st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
+
 
 
 
