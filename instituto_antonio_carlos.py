@@ -205,6 +205,7 @@ def exibir_cursos():
             ]
        
 }
+}
 
 for area, cursos_area in cursos.items():
     with st.expander(f"Área: {area}"):
