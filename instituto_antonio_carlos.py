@@ -309,6 +309,7 @@ def main():
         exibir_cursos()
     elif escolha == "Sair do App":
         st.subheader("Obrigado por escolher o Instituto Antonio Carlos!")
+        st.write("Para mais informações, visite nosso [site]https://institutoac.my.canva.site).")
         st.stop()
 
 if __name__ == '__main__':
