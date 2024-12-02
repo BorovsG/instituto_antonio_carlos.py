@@ -149,24 +149,23 @@ def alterar_cadastro():
 
     buscar = st.button("Buscar")
 
-    if buscar:
-        if validar_cpf(cpf):
-            try:
-                df = pd.read_csv("cadastros.csv", header=None)
-                df.columns = ["Nome Completo", "CPF", "Email", "Data de Nascimento", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
-                aluno = df[df["CPF"].astype(str) == cpf]
-                if not aluno.empty:
-                    st.session_state["dados_aluno"] = aluno.iloc[0]
-                    st.write("Cadastro Encontrado:")
-                    st.write(aluno)
-                else:
-                    st.error("CPF não encontrado.")
-            except FileNotFoundError:
-                st.error("Nenhum aluno cadastrado encontrado.")
-            except pd.errors.EmptyDataError:
-                st.warning("O arquivo de cadastros está vazio.")
-        else:
-            st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+    if buscar and validar_cpf(cpf):
+        try:
+            df = pd.read_csv("cadastros.csv", header=None)
+            df.columns = ["Nome Completo", "CPF", "Email", "Data de Nascimento", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+            aluno = df[df["CPF"].astype(str) == cpf]
+            if not aluno.empty:
+                st.session_state["dados_aluno"] = aluno.iloc[0]
+                st.write("Cadastro Encontrado:")
+                st.write(aluno)
+            else:
+                st.error("CPF não encontrado.")
+        except FileNotFoundError:
+            st.error("Nenhum aluno cadastrado encontrado.")
+        except pd.errors.EmptyDataError:
+            st.warning("O arquivo de cadastros está vazio.")
+    elif buscar:
+        st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
     if st.session_state["dados_aluno"] is not None:
         dados_aluno = st.session_state["dados_aluno"]
@@ -178,7 +177,9 @@ def alterar_cadastro():
         novo_numero = st.text_input("Novo Número", value=dados_aluno["Número"])
         novo_complemento = st.text_input("Novo Complemento", value=dados_aluno["Complemento"])
 
-        if st.button("Salvar Alterações"):
+        salvar = st.button("Salvar Alterações")
+
+        if salvar:
             erros = []
             if novo_nome != dados_aluno["Nome Completo"] and not validar_nome_completo(novo_nome):
                 erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
@@ -214,6 +215,7 @@ def alterar_cadastro():
                 st.success("Cadastro atualizado com sucesso!")
                 st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
                 st.experimental_rerun()
+
 
 # Função de excluir cadastro
 def excluir_cadastro_view():
