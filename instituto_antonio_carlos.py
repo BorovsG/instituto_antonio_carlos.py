@@ -139,7 +139,9 @@ def visualizar_alunos():
 def alterar_cadastro():
     st.header("Alterar Cadastro")
     cpf = st.text_input("Digite o CPF do aluno para alterar (apenas números, 11 dígitos)")
-    if st.button("Buscar"):
+    buscar = st.button("Buscar")
+    
+    if buscar:
         if validar_cpf(cpf):
             try:
                 df = pd.read_csv("cadastros.csv", header=None)
@@ -154,7 +156,9 @@ def alterar_cadastro():
                     novo_cep = st.text_input("Novo CEP (apenas números, 8 dígitos)", value=aluno["CEP"].values[0])
                     novo_numero = st.text_input("Novo Número", value=aluno["Número"].values[0])
                     novo_complemento = st.text_input("Novo Complemento", value=aluno["Complemento"].values[0])
-                    if st.button("Salvar Alterações"):
+                    salvar = st.button("Salvar Alterações")
+                    
+                    if salvar:
                         if validar_nome_completo(novo_nome) and validar_data_nascimento(nova_data_nascimento) and validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
                             endereco_info = get_address_info(novo_cep)
                             if endereco_info:
@@ -164,6 +168,7 @@ def alterar_cadastro():
                                 dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
+                                st.experimental_rerun()  # Atualiza a página após salvar as alterações
                             else:
                                 st.error("CEP inválido ou não encontrado.")
                         else:
@@ -176,6 +181,7 @@ def alterar_cadastro():
                 st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+
 
 
 def excluir_cadastro_view():
