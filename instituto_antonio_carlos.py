@@ -195,18 +195,26 @@ def alterar_cadastro():
                 for erro in erros:
                     st.error(erro)
             else:
-                endereco_info = get_address_info(novo_cep) if novo_cep != dados_aluno["CEP"] else {"localidade": dados_aluno["Cidade"], "logradouro": dados_aluno["Rua"], "bairro": dados_aluno["Bairro"]}
-                if endereco_info or novo_cep == dados_aluno["CEP"]:
-                    cidade = endereco_info.get("localidade", dados_aluno["Cidade"])
-                    rua = endereco_info.get("logradouro", dados_aluno["Rua"])
-                    bairro = endereco_info.get("bairro", dados_aluno["Bairro"])
-                    dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
-                    atualizar_dados_csv(cpf, dados_atualizados)
-                    st.success("Cadastro atualizado com sucesso!")
-                    st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
-                    st.experimental_rerun()
+                if novo_cep != dados_aluno["CEP"]:
+                    endereco_info = get_address_info(novo_cep)
+                    if endereco_info:
+                        cidade = endereco_info.get("localidade", "")
+                        rua = endereco_info.get("logradouro", "")
+                        bairro = endereco_info.get("bairro", "")
+                    else:
+                        st.error("CEP inválido ou não encontrado.")
+                        return
                 else:
-                    st.error("CEP inválido ou não encontrado.")
+                    cidade = dados_aluno["Cidade"]
+                    rua = dados_aluno["Rua"]
+                    bairro = dados_aluno["Bairro"]
+
+                dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
+                atualizar_dados_csv(cpf, dados_atualizados)
+                st.success("Cadastro atualizado com sucesso!")
+                st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
+                st.experimental_rerun()
+
 
 
 # Função de excluir cadastro
