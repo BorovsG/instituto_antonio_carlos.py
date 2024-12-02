@@ -114,15 +114,10 @@ def visualizar_alunos():
     st.header("Alunos Cadastrados")
     try:
         df = pd.read_csv("cadastros.csv", header=None)
-        if df.empty:
-            st.warning("Nenhum aluno cadastrado encontrado.")
-        else:
-            df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
-            st.dataframe(df)
+        df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+        st.dataframe(df)
     except FileNotFoundError:
         st.error("Nenhum aluno cadastrado encontrado.")
-    except pd.errors.EmptyDataError:
-        st.warning("O arquivo de cadastros está vazio.")
 
 def alterar_cadastro():
     st.header("Alterar Cadastro")
@@ -157,8 +152,6 @@ def alterar_cadastro():
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
                 st.error("Nenhum aluno cadastrado encontrado.")
-            except pd.errors.EmptyDataError:
-                st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
@@ -200,19 +193,19 @@ def exibir_cursos():
             ]
         },
         "Ciências Sociais": {
-                "Administração": [
-        "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
-      ]
-   }
-}
-
-for area, cursos_area in cursos.items():
-    with st.expander(f"Área: {area}"):
-        for curso, aulas in cursos_area.items():
-            with st.expander(f"Curso: {curso}"):
-                st.write("**Aulas**:")
-                for aula in aulas:
-                    st.write(f"- {aula}")
+            "Administração": [
+                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
+            ]
+        }
+    }
+    
+    for area, cursos_area in cursos.items():
+        with st.expander(f"Área: {area}"):
+                        for curso, aulas in cursos_area.items():
+                with st.expander(f"Curso: {curso}"):
+                    st.write("**Aulas**:")
+                    for aula in aulas:
+                        st.write(f"- {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -242,4 +235,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
  
