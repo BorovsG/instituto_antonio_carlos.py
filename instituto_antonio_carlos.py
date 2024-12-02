@@ -108,7 +108,7 @@ def criar_cadastro():
             erros.append("CPF deve conter apenas números e ter 11 dígitos.")
         if not validar_email(email):
             erros.append("Email inválido.")
-        if não validar_data_nascimento(data_nascimento):
+        if not validar_data_nascimento(data_nascimento):
             erros.append("Data de nascimento inválida ou você é menor de idade.")
         if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
@@ -116,7 +116,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro em erros:
+            for erro in erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, número, complemento]
