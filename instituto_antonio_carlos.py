@@ -193,7 +193,7 @@ def exibir_cursos():
             "Medicina": [
                 "Anatomia Humana", "Fisiologia", "Farmacologia", "Patologia", "Clínica Médica", "Cirurgia Geral"
             ],
-                        "Odontologia": [
+            "Odontologia": [
                 "Anatomia Dentária", "Periodontia", "Endodontia", "Prótese Dentária", "Radiologia Odontológica", "Cirurgia Buco-maxilo-facial"
             ]
         },
