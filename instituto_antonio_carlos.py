@@ -112,7 +112,7 @@ def criar_cadastro():
             erros.append("Data de nascimento inválida ou você é menor de idade.")
         if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
-        if não número.isnumeric():
+        if not número.isnumeric():
             erros.append("Número deve conter apenas números.")
 
         if erros:
