@@ -180,22 +180,22 @@ def alterar_cadastro():
 
         if st.button("Salvar Alterações"):
             erros = []
-            if not validar_nome_completo(novo_nome):
+            if novo_nome != dados_aluno["Nome Completo"] and not validar_nome_completo(novo_nome):
                 erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
-            if not validar_data_nascimento(nova_data_nascimento):
+            if nova_data_nascimento != dados_aluno["Data de Nascimento"] and not validar_data_nascimento(nova_data_nascimento):
                 erros.append("Data de nascimento inválida ou você é menor de idade.")
-            if not validar_cep(novo_cep):
+            if novo_cep != dados_aluno["CEP"] and not validar_cep(novo_cep):
                 erros.append("CEP deve conter apenas números e ter 8 dígitos.")
-            if not validar_email(novo_email):
+            if novo_email != dados_aluno["Email"] and not validar_email(novo_email):
                 erros.append("Email inválido.")
-            if not novo_numero.isnumeric():
+            if novo_numero != dados_aluno["Número"] and not novo_numero.isnumeric():
                 erros.append("Número deve conter apenas números.")
 
             if erros:
                 for erro in erros:
                     st.error(erro)
             else:
-                endereco_info = get_address_info(novo_cep)
+                endereco_info = get_address_info(novo_cep) if novo_cep != dados_aluno["CEP"] else {"localidade": dados_aluno["Cidade"], "logradouro": dados_aluno["Rua"], "bairro": dados_aluno["Bairro"]}
                 if endereco_info:
                     cidade = endereco_info.get("localidade", "")
                     rua = endereco_info.get("logradouro", "")
@@ -207,6 +207,7 @@ def alterar_cadastro():
                     st.experimental_rerun()
                 else:
                     st.error("CEP inválido ou não encontrado.")
+
 
 
 # Função de excluir cadastro
