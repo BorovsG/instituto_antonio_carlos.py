@@ -5,9 +5,6 @@ import csv
 import pandas as pd
 from datetime import datetime
 
-# Lista para armazenar CPFs excluídos cpf_excluidos 
-cpf_excluidos = []
-
 # Funções auxiliares de validação e busca de endereço
 def get_address_info(cep):
     response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
@@ -69,7 +66,6 @@ def excluir_cadastro(cpf):
         with open("cadastros.csv", mode="w", newline="") as file:
             writer = csv.writer(file)
             writer.writerows(linhas)
-        cpf_excluidos.append(cpf)  # Adiciona CPF à lista de excluídos
         return True
     else:
         return False
@@ -237,52 +233,71 @@ def excluir_cadastro_view():
 
 def exibir_cursos():
     st.header("Cursos Disponíveis")
-
-    cpf = st.text_input("Digite seu CPF para acessar os cursos (apenas números, 11 dígitos)")
-    if validar_cpf(cpf) and cpf not in cpf_excluidos:
-        cursos = {
-            "Saúde": ["Medicina", "Enfermagem", "Fisioterapia"],
-            "Tecnologia": ["Engenharia da Computação", "Ciência da Computação", "Sistemas de Informação"],
-            "Humanas": ["Direito", "Psicologia", "Administração"]
+    cursos = {
+        "Saúde": {
+            "Medicina": [
+                "Anatomia Humana", "Fisiologia", "Farmacologia", "Patologia", "Clínica Médica", "Cirurgia Geral"
+            ],
+            "Odontologia": [
+                "Anatomia Dentária", "Periodontia", "Endodontia", "Prótese Dentária", "Radiologia Odontológica", "Cirurgia Buco-maxilo-facial"
+            ]
+        },
+        "Tecnologia": {
+            "Análise e Desenvolvimento de Sistemas": [
+                "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
+            ]
+        },
+        "Ciências Humanas": {
+            "Direito": [
+                "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
+            ],
+            "Psicologia": [
+                "Teorias da Personalidade", "Psicologia do Desenvolvimento", "Psicopatologia", "Psicologia Social", "Neuropsicologia", "Psicoterapia"
+            ]
+        },
+        "Ciências Sociais": {
+            "Administração": [
+                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
+            ]
         }
+    }
 
-        for area, cursos_disponiveis in cursos.items():
-            st.subheader(area)
-            for curso in cursos_disponiveis:
-                st.write(curso)
-    else:
-        st.error("Acesso negado. Seu cadastro foi excluído ou o CPF é inválido.")
+    for area, cursos_area in cursos.items():
+        with st.expander(f"Área: {area}"):
+            for curso, aulas in cursos_area.items():
+                if st.button(f"Curso: {curso}"):
+                    st.write("**Aulas**:")
+                    for aula in aulas:
+                        st.write(f"- {aula}")
 
 def main():
-    st.title("Instituto Antonio Carlos")
-    menu = ["Tela Inicial", "Criar Cadastro", "Visualizar Alunos", "Alterar Cadastro", "Excluir Cadastro", "Cursos Disponíveis", "Sair do App"]
+    st.title("INSTITUTO ANTONIO CARLOS")
+    st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
+
+    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Excluir Cadastro", "Acessar Cursos", "Sair"]
     escolha = st.sidebar.selectbox("Menu", menu)
 
-    if escolha == "Tela Inicial":
+    if escolha == "Início":
         st.subheader("Bem-vindo ao Instituto Antonio Carlos!")
-        st.write(
-            """
-            O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.
-            """
-        )
-        st.write("Selecione uma opção no menu ao lado para começar.")
     elif escolha == "Criar Cadastro":
         criar_cadastro()
-    elif escolha == "Visualizar Alunos":
+    elif escolha == "Aluno Existente":
         visualizar_alunos()
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Excluir Cadastro":
         excluir_cadastro_view()
-    elif escolha == "Cursos Disponíveis":
-        exibir_cursos()
-    elif escolha == "Sair do App":
-        st.subheader("Obrigado por escolher o Instituto Antonio Carlos!")
+    elif escolha == "Acessar Cursos":
+        if st.session_state.get("cadastrado", False):
+            exibir_cursos()
+        else:
+            st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
+    elif escolha == "Sair":
+        st.subheader("Obrigado por usar o sistema!")
         st.stop()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
 
 
 
