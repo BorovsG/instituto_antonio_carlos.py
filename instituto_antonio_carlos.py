@@ -271,33 +271,35 @@ def exibir_cursos():
                         st.write(f"- {aula}")
 
 def main():
-    st.title("INSTITUTO ANTONIO CARLOS")
-    st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
-
-    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Excluir Cadastro", "Acessar Cursos", "Sair"]
+    st.title("Instituto Antonio Carlos")
+    menu = ["Tela Inicial", "Criar Cadastro", "Visualizar Alunos", "Alterar Cadastro", "Excluir Cadastro", "Cursos Disponíveis", "Sair do App"]
     escolha = st.sidebar.selectbox("Menu", menu)
 
-    if escolha == "Início":
+    if escolha == "Tela Inicial":
         st.subheader("Bem-vindo ao Instituto Antonio Carlos!")
+        st.write(
+            """
+            O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.
+            """
+        )
+        st.write("Selecione uma opção no menu ao lado para começar.")
     elif escolha == "Criar Cadastro":
         criar_cadastro()
-    elif escolha == "Aluno Existente":
+    elif escolha == "Visualizar Alunos":
         visualizar_alunos()
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Excluir Cadastro":
         excluir_cadastro_view()
-    elif escolha == "Acessar Cursos":
-        if st.session_state.get("cadastrado", False):
-            exibir_cursos()
-        else:
-            st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
-    elif escolha == "Sair":
-        st.subheader("Obrigado por usar o sistema!")
+    elif escolha == "Cursos Disponíveis":
+        exibir_cursos()
+    elif escolha == "Sair do App":
+        st.subheader("Obrigado por escolher o Instituto Antonio Carlos!")
         st.stop()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
+
 
 
 
