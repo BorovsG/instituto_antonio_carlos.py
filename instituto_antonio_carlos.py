@@ -6,6 +6,14 @@ import pandas as pd
 from datetime import datetime
 
 # Funções auxiliares de validação e busca de endereço
+import streamlit as st
+import requests
+import re
+import csv
+import pandas as pd
+from datetime import datetime
+
+# Funções auxiliares de validação e busca de endereço
 def get_address_info(cep):
     response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
     if response.status_code == 200:
@@ -17,14 +25,18 @@ def validar_nome_completo(nome_completo):
     return re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$", nome_completo) and " " in nome_completo.strip()
 
 def validar_cpf(cpf):
-    return cpf.isnumeric() and len(cpf) == 11
+    # Regex para CPF com pontos e traço: 123.456.789-09
+    return re.match(r"^\d{3}\.\d{3}\.\d{3}-\d{2}$", cpf)
 
 def validar_email(email):
     padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return bool(re.match(padrao, email))
 
 def validar_cep(cep):
-    return cep.isnumeric() and len(cep) == 8
+    if re.match(r"^\d{5}-\d{3}$", cep):
+        endereco_info = get_address_info(cep.replace("-", ""))
+        return endereco_info is not None
+    return False
 
 def validar_data_nascimento(data_nascimento):
     try:
@@ -74,55 +86,45 @@ def excluir_cadastro(cpf):
 def criar_cadastro():
     st.header("Criar Cadastro")
     nome_completo = st.text_input("Nome Completo (deve conter apenas letras e espaço para sobrenome)")
-    cpf = st.text_input("CPF (apenas números, 11 dígitos)")
+    cpf = st.text_input("CPF (formato: 123.456.789-09)")
     email = st.text_input("Email")
     data_nascimento = st.text_input("Data de Nascimento (dd/mm/aaaa)")
-    cep = st.text_input("CEP (apenas números, 8 dígitos)")
-
-    cep_valido = False
-    cidade, rua, bairro = "", "", ""
-    if cep:
-        if validar_cep(cep):
-            endereco_info = get_address_info(cep)
-            if endereco_info:
-                cep_valido = True
-                cidade = endereco_info.get("localidade", "")
-                rua = endereco_info.get("logradouro", "")
-                bairro = endereco_info.get("bairro", "")
-                st.text_input("Cidade", cidade)
-                st.text_input("Rua", rua)
-                st.text_input("Bairro", bairro)
-            else:
-                st.error("CEP inválido ou não encontrado.")
-        else:
-            st.error("CEP deve conter apenas números e ter 8 dígitos.")
-
-    numero = st.text_input("Número")
-    complemento = st.text_input("Complemento")
+    cep = st.text_input("CEP (formato: 12345-678)")
 
     if st.button("Enviar"):
         erros = []
         if not validar_nome_completo(nome_completo):
             erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
         if not validar_cpf(cpf):
-            erros.append("CPF deve conter apenas números e ter 11 dígitos.")
+            erros.append("CPF deve estar no formato 123.456.789-09.")
         if not validar_email(email):
             erros.append("Email inválido.")
         if not validar_data_nascimento(data_nascimento):
             erros.append("Data de nascimento inválida ou você é menor de idade.")
-        if not cep_valido:
-            erros.append("CEP inválido ou não preenchido.")
+        if not validar_cep(cep):
+            erros.append("CEP inválido. Use o formato 12345-678.")
+        
+        numero = st.text_input("Número")
+        complemento = st.text_input("Complemento")
+        
         if not numero.isnumeric():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro in erros:
+            for erro em erros:
                 st.error(erro)
         else:
+            endereco_info = get_address_info(cep.replace("-", ""))
+            cidade = endereco_info["localidade"]
+            rua = endereco_info["logradouro"]
+            bairro = endereco_info["bairro"]
+
             dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, numero, complemento]
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
+
+# Função principal e demais funções inalteradas...
 
 # Função de visualizar alunos cadastrados
 def visualizar_alunos():
