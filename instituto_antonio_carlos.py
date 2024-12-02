@@ -1,3 +1,4 @@
+
 import streamlit as st
 import requests
 import re
@@ -148,7 +149,7 @@ def alterar_cadastro():
         if st.button("Buscar"):
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
-def excluir_cadastro():
+def excluir_cadastro_view():
     st.header("Excluir Cadastro")
     cpf = st.text_input("Digite o CPF do aluno para excluir (apenas números, 11 dígitos)")
     if validar_cpf(cpf):
@@ -200,7 +201,6 @@ def exibir_cursos():
                     st.write("**Aulas**:")
                     for aula in aulas:
                         st.write(f"- {aula}")
-
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
     st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
