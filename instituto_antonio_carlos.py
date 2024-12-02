@@ -44,14 +44,21 @@ def atualizar_dados_csv(cpf, dados_atualizados):
 
 def excluir_cadastro(cpf):
     linhas = []
+    cpf_encontrado = False
     with open("cadastros.csv", mode="r") as file:
         reader = csv.reader(file)
         for linha in reader:
             if linha[1] != cpf:
                 linhas.append(linha)
-    with open("cadastros.csv", mode="w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerows(linhas)
+            else:
+                cpf_encontrado = True
+    if cpf_encontrado:
+        with open("cadastros.csv", mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerows(linhas)
+        return True
+    else:
+        return False
 
 def criar_cadastro():
     st.header("Criar Cadastro")
@@ -152,11 +159,10 @@ def excluir_cadastro_view():
     cpf = st.text_input("Digite o CPF do aluno para excluir (apenas números, 11 dígitos)")
     if st.button("Excluir"):
         if validar_cpf(cpf):
-            try:
-                excluir_cadastro(cpf)
+            if excluir_cadastro(cpf):
                 st.success("Cadastro excluído com sucesso!")
-            except FileNotFoundError:
-                st.error("Nenhum aluno cadastrado encontrado.")
+            else:
+                st.error("CPF não encontrado.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
