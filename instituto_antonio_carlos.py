@@ -111,7 +111,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro em erros:
+            for erro in erros:
                 st.error(erro)
         else:
             endereco_info = get_address_info(cep.replace("-", ""))
