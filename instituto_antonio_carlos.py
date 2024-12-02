@@ -200,19 +200,17 @@ def exibir_cursos():
             ]
         },
         "Ciências Sociais": {
-            "Administração": 
-                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
-            ]
-        }
-    }
-    
-    for area, cursos_area in cursos.items():
-        with st.expander(f"Área: {area}"):
-            for curso, aulas in cursos_area.items():
-                with st.expander(f"Curso: {curso}"):
-                    st.write("**Aulas**:")
-                    for aula in aulas:
-                        st.write(f"- {aula}")
+              "Administração": [
+        "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
+    ]}
+
+for area, cursos_area in cursos.items():
+    with st.expander(f"Área: {area}"):
+        for curso, aulas in cursos_area.items():
+            with st.expander(f"Curso: {curso}"):
+                st.write("**Aulas**:")
+                for aula in aulas:
+                    st.write(f"- {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -242,9 +240,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
