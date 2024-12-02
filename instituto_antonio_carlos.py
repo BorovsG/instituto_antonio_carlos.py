@@ -179,7 +179,22 @@ def alterar_cadastro():
         novo_complemento = st.text_input("Novo Complemento", value=dados_aluno["Complemento"])
 
         if st.button("Salvar Alterações"):
-            if validar_nome_completo(novo_nome) and validar_data_nascimento(nova_data_nascimento) and validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
+            erros = []
+            if not validar_nome_completo(novo_nome):
+                erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
+            if not validar_data_nascimento(nova_data_nascimento):
+                erros.append("Data de nascimento inválida ou você é menor de idade.")
+            if not validar_cep(novo_cep):
+                erros.append("CEP deve conter apenas números e ter 8 dígitos.")
+            if not validar_email(novo_email):
+                erros.append("Email inválido.")
+            if not novo_numero.isnumeric():
+                erros.append("Número deve conter apenas números.")
+
+            if erros:
+                for erro in erros:
+                    st.error(erro)
+            else:
                 endereco_info = get_address_info(novo_cep)
                 if endereco_info:
                     cidade = endereco_info.get("localidade", "")
@@ -189,10 +204,10 @@ def alterar_cadastro():
                     atualizar_dados_csv(cpf, dados_atualizados)
                     st.success("Cadastro atualizado com sucesso!")
                     st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
+                    st.experimental_rerun()
                 else:
                     st.error("CEP inválido ou não encontrado.")
-            else:
-                st.error("Dados inválidos. Verifique o nome completo, a data de nascimento, o CEP, o email e o número.")
+
 
 # Função de excluir cadastro
 def excluir_cadastro_view():
