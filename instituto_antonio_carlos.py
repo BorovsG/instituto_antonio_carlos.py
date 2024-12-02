@@ -5,13 +5,6 @@ import csv
 import pandas as pd
 from datetime import datetime
 
-# Funções auxiliares de validação e busca de endereço
-import streamlit as st
-import requests
-import re
-import csv
-import pandas as pd
-from datetime import datetime
 
 # Funções auxiliares de validação e busca de endereço
 def get_address_info(cep):
@@ -83,7 +76,7 @@ def excluir_cadastro(cpf):
 def criar_cadastro():
     st.header("Criar Cadastro")
     nome_completo = st.text_input("Nome Completo (deve conter apenas letras e espaço para sobrenome)")
-    cpf = st.text_input("CPF (apenas números, 11 dígitos)")
+    cpf = st.text_input("CPF (apenas números, no formato xxx.xxx.xxx-65)")
     email = st.text_input("Email")
     data_nascimento = st.text_input("Data de Nascimento (dd/mm/aaaa)")
     cep = st.text_input("CEP (apenas números, 8 dígitos)")
