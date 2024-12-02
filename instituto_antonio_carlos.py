@@ -231,8 +231,20 @@ def excluir_cadastro_view():
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
+# Função de exibir cursos disponíveis
 def exibir_cursos():
     st.header("Cursos Disponíveis")
+
+    # Verificação de existência de cadastros
+    try:
+        df = pd.read_csv("cadastros.csv", header=None)
+        if df.empty:
+            st.warning("Nenhum cadastro encontrado. Cadastre-se para acessar os cursos.")
+            return
+    except (FileNotFoundError, pd.errors.EmptyDataError):
+        st.warning("Nenhum cadastro encontrado. Cadastre-se para acessar os cursos.")
+        return
+
     cursos = {
         "Saúde": {
             "Medicina": [
@@ -262,13 +274,15 @@ def exibir_cursos():
         }
     }
 
-    for area, cursos_area in cursos.items():
-        with st.expander(f"Área: {area}"):
-            for curso, aulas in cursos_area.items():
-                if st.button(f"Curso: {curso}"):
-                    st.write("**Aulas**:")
-                    for aula in aulas:
-                        st.write(f"- {aula}")
+    for area, cursos_disponiveis in cursos.items():
+        with st.expander(area):
+            for curso, disciplinas in cursos_disponiveis.items():
+                if st.button(curso):
+                    st.write(f"Você selecionou o curso de {curso}.")
+                    st.write("Disciplinas:")
+                    for disciplina in disciplinas:
+                        st.write(f"- {disciplina}")
+
 
 def main():
     st.title("Instituto Antonio Carlos")
