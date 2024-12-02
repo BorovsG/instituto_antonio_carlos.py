@@ -193,37 +193,37 @@ def exibir_cursos():
             "Medicina": [
                 "Anatomia Humana", "Fisiologia", "Farmacologia", "Patologia", "Clínica Médica", "Cirurgia Geral"
             ],
-            "Odontologia": [
+                        "Odontologia": [
                 "Anatomia Dentária", "Periodontia", "Endodontia", "Prótese Dentária", "Radiologia Odontológica", "Cirurgia Buco-maxilo-facial"
             ]
         },
         "Tecnologia": {
-                    "Análise e Desenvolvimento de Sistemas": [
-            "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
-        ]
-    },
-    "Ciências Humanas": {
-        "Direito": [
-            "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
-        ],
-        "Psicologia": [
-            "Teorias da Personalidade", "Psicologia do Desenvolvimento", "Psicopatologia", "Psicologia Social", "Neuropsicologia", "Psicoterapia"
-        ]
-    },
-    "Ciências Sociais": {
-        "Administração": [
-            "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
-        ]
+            "Análise e Desenvolvimento de Sistemas": [
+                "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
+            ]
+        },
+        "Ciências Humanas": {
+            "Direito": [
+                "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
+            ],
+            "Psicologia": [
+                "Teorias da Personalidade", "Psicologia do Desenvolvimento", "Psicopatologia", "Psicologia Social", "Neuropsicologia", "Psicoterapia"
+            ]
+        },
+        "Ciências Sociais": {
+            "Administração": [
+                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
+            ]
+        }
     }
-}
 
-for area, cursos_area in cursos.items():
-    with st.expander(f"Área: {area}"):
-        for curso, aulas in cursos_area.items():
-            with st.expander(f"Curso: {curso}"):
-                st.write("**Aulas**:")
-                for aula in aulas:
-                    st.write(f"- {aula}")
+    for area, cursos_area in cursos.items():
+        with st.expander(f"Área: {area}"):
+            for curso, aulas in cursos_area.items():
+                with st.expander(f"Curso: {curso}"):
+                    st.write("**Aulas**:")
+                    for aula in aulas:
+                        st.write(f"- {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -253,5 +253,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+ 
 
  
