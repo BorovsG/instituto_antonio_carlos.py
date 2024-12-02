@@ -141,7 +141,7 @@ def alterar_cadastro():
                     novo_numero = st.text_input("Novo Número", value=aluno["Número"].values[0])
                     novo_complemento = st.text_input("Novo Complemento", value=aluno["Complemento"].values[0])
                     if st.button("Salvar Alterações"):
-                        if validar_cep(novo_cep) e validar_email(novo_email) e novo_numero.isnumeric():
+                        if validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
                             endereco_info = get_address_info(novo_cep)
                             if endereco_info:
                                 cidade = endereco_info.get("localidade", "")
