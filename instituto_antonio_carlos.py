@@ -179,6 +179,7 @@ def alterar_cadastro():
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
 
+
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
     cpf = st.text_input("Digite o CPF do aluno para excluir (apenas números, 11 dígitos)")
