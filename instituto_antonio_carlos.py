@@ -145,6 +145,11 @@ def alterar_cadastro():
                                 dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
+                                st.experimental_rerun()  # Atualiza a página após salvar as alterações
+                        else:
+                            st.error("Dados inválidos. Verifique o CEP, o email e o número.")
+                else:
+                    st.error("CPF não encontrado.")
             except FileNotFoundError:
                 st.error("Nenhum aluno cadastrado encontrado.")
         else:
@@ -157,6 +162,7 @@ def excluir_cadastro_view():
         if validar_cpf(cpf):
             if excluir_cadastro(cpf):
                 st.success("Cadastro excluído com sucesso!")
+                st.experimental_rerun()  # Atualiza a página após excluir o cadastro
             else:
                 st.error("CPF não encontrado.")
         else:
@@ -192,7 +198,7 @@ def exibir_cursos():
             ]
         }
     }
-
+    
     for area, cursos_area in cursos.items():
         with st.expander(f"Área: {area}"):
             for curso, aulas in cursos_area.items():
