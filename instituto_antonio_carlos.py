@@ -215,8 +215,6 @@ def alterar_cadastro():
                 st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
                 st.experimental_rerun()
 
-
-
 # Função de excluir cadastro
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
