@@ -5,6 +5,9 @@ import csv
 import pandas as pd
 from datetime import datetime
 
+# Lista para armazenar CPFs excluídos cpf_excluidos 
+cpf_excluidos = []
+
 # Funções auxiliares de validação e busca de endereço
 def get_address_info(cep):
     response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
@@ -66,6 +69,7 @@ def excluir_cadastro(cpf):
         with open("cadastros.csv", mode="w", newline="") as file:
             writer = csv.writer(file)
             writer.writerows(linhas)
+        cpf_excluidos.append(cpf)  # Adiciona CPF à lista de excluídos
         return True
     else:
         return False
@@ -233,42 +237,21 @@ def excluir_cadastro_view():
 
 def exibir_cursos():
     st.header("Cursos Disponíveis")
-    cursos = {
-        "Saúde": {
-            "Medicina": [
-                "Anatomia Humana", "Fisiologia", "Farmacologia", "Patologia", "Clínica Médica", "Cirurgia Geral"
-            ],
-            "Odontologia": [
-                "Anatomia Dentária", "Periodontia", "Endodontia", "Prótese Dentária", "Radiologia Odontológica", "Cirurgia Buco-maxilo-facial"
-            ]
-        },
-        "Tecnologia": {
-            "Análise e Desenvolvimento de Sistemas": [
-                "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
-            ]
-        },
-        "Ciências Humanas": {
-            "Direito": [
-                "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
-            ],
-            "Psicologia": [
-                "Teorias da Personalidade", "Psicologia do Desenvolvimento", "Psicopatologia", "Psicologia Social", "Neuropsicologia", "Psicoterapia"
-            ]
-        },
-        "Ciências Sociais": {
-            "Administração": [
-                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
-            ]
-        }
-    }
 
-    for area, cursos_area in cursos.items():
-        with st.expander(f"Área: {area}"):
-            for curso, aulas in cursos_area.items():
-                if st.button(f"Curso: {curso}"):
-                    st.write("**Aulas**:")
-                    for aula in aulas:
-                        st.write(f"- {aula}")
+    cpf = st.text_input("Digite seu CPF para acessar os cursos (apenas números, 11 dígitos)")
+    if validar_cpf(cpf) and cpf not in cpf_excluidos:
+        cursos = {
+            "Saúde": ["Medicina", "Enfermagem", "Fisioterapia"],
+            "Tecnologia": ["Engenharia da Computação", "Ciência da Computação", "Sistemas de Informação"],
+            "Humanas": ["Direito", "Psicologia", "Administração"]
+        }
+
+        for area, cursos_disponiveis em cursos.items():
+            st.subheader(area)
+            for curso in cursos_disponiveis:
+                st.write(curso)
+    else:
+        st.error("Acesso negado. Seu cadastro foi excluído ou o CPF é inválido.")
 
 def main():
     st.title("Instituto Antonio Carlos")
@@ -299,6 +282,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
