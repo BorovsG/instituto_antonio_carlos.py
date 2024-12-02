@@ -6,6 +6,14 @@ import pandas as pd
 from datetime import datetime
 
 # Funções auxiliares de validação e busca de endereço
+import streamlit as st
+import requests
+import re
+import csv
+import pandas as pd
+from datetime import datetime
+
+# Funções auxiliares de validação e busca de endereço
 def get_address_info(cep):
     response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
     if response.status_code == 200:
@@ -17,7 +25,8 @@ def validar_nome_completo(nome_completo):
     return re.match(r"^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$", nome_completo) and " " in nome_completo.strip()
 
 def validar_cpf(cpf):
-    return cpf.isnumeric() and len(cpf) == 11
+    # Regex para CPF com pontos e traço: 123.456.789-09
+    return re.match(r"^\d{3}\.\d{3}\.\d{3}-\d{2}$", cpf)
 
 def validar_email(email):
     padrao = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
