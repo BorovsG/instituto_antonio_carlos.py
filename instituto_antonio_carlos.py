@@ -121,6 +121,7 @@ def criar_cadastro():
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
+
 def visualizar_alunos():
     st.header("Alunos Cadastrados")
     try:
@@ -218,12 +219,12 @@ def exibir_cursos():
     }
 
     for area, cursos_area in cursos.items():
-        with st.expander(f"Área: {area}"):
-            for curso, aulas in cursos_area.items():
-                with st.expander(f"Curso: {curso}"):
-                    st.write("**Aulas**:")
-                    for aula in aulas:
-                        st.write(f"- {aula}")
+        st.subheader(f"Área: {area}")
+        for curso, aulas in cursos_area.items():
+            st.markdown(f"### Curso: {curso}")
+            st.write("**Aulas**:")
+            for aula in aulas:
+                st.write(f"- {aula}")
 
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
@@ -253,6 +254,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
  
 
  
