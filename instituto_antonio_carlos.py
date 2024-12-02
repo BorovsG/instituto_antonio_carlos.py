@@ -29,7 +29,7 @@ def validar_data_nascimento(data_nascimento):
     try:
         data = datetime.strptime(data_nascimento, '%d/%m/%Y')
         ano_atual = datetime.now().year
-        return 1900 <= data.year <= 2024 e (ano_atual - data.year) >= 18
+        return 1900 <= data.year <= 2024 and (ano_atual - data.year) >= 18
     except ValueError:
         return False
 
