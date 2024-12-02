@@ -108,18 +108,18 @@ def criar_cadastro():
             erros.append("CPF deve conter apenas números e ter 11 dígitos.")
         if not validar_email(email):
             erros.append("Email inválido.")
-        if not validar_data_nascimento(data_nascimento):
+        if não validar_data_nascimento(data_nascimento):
             erros.append("Data de nascimento inválida ou você é menor de idade.")
         if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
-        if not numero.isnumeric():
+        if não número.isnumeric():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro in erros:
+            for erro em erros:
                 st.error(erro)
         else:
-            dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, numero, complemento]
+            dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, número, complemento]
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
@@ -143,44 +143,56 @@ def visualizar_alunos():
 def alterar_cadastro():
     st.header("Alterar Cadastro")
     cpf = st.text_input("Digite o CPF do aluno para alterar (apenas números, 11 dígitos)")
-    buscar = st.button("Buscar")
-    
-    if buscar and validar_cpf(cpf):
-        try:
-            df = pd.read_csv("cadastros.csv", header=None)
-            df.columns = ["Nome Completo", "CPF", "Email", "Data de Nascimento", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
-            aluno = df[df["CPF"].astype(str) == cpf]  # Convertendo a coluna CPF para string e comparando
-            if not aluno.empty:
-                st.write("Cadastro Encontrado:")
-                novo_nome = st.text_input("Novo Nome Completo", value=aluno["Nome Completo"].values[0])
-                nova_data_nascimento = st.text_input("Nova Data de Nascimento (dd/mm/aaaa)", value=aluno["Data de Nascimento"].values[0])
-                novo_email = st.text_input("Novo Email", value=aluno["Email"].values[0])
-                novo_cep = st.text_input("Novo CEP (apenas números, 8 dígitos)", value=aluno["CEP"].values[0])
-                novo_numero = st.text_input("Novo Número", value=aluno["Número"].values[0])
-                novo_complemento = st.text_input("Novo Complemento", value=aluno["Complemento"].values[0])
 
-                if st.button("Salvar Alterações"):
-                    if validar_nome_completo(novo_nome) and validar_data_nascimento(nova_data_nascimento) and validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
-                        endereco_info = get_address_info(novo_cep)
-                        if endereco_info:
-                            cidade = endereco_info.get("localidade", "")
-                            rua = endereco_info.get("logradouro", "")
-                            bairro = endereco_info.get("bairro", "")
-                            dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
-                            atualizar_dados_csv(cpf, dados_atualizados)
-                            st.success("Cadastro atualizado com sucesso!")
-                        else:
-                            st.error("CEP inválido ou não encontrado.")
-                    else:
-                        st.error("Dados inválidos. Verifique o nome completo, a data de nascimento, o CEP, o email e o número.")
+    if "dados_aluno" not in st.session_state:
+        st.session_state["dados_aluno"] = None
+
+    buscar = st.button("Buscar")
+
+    if buscar:
+        if validar_cpf(cpf):
+            try:
+                df = pd.read_csv("cadastros.csv", header=None)
+                df.columns = ["Nome Completo", "CPF", "Email", "Data de Nascimento", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+                aluno = df[df["CPF"].astype(str) == cpf]
+                if not aluno.empty:
+                    st.session_state["dados_aluno"] = aluno.iloc[0]
+                    st.write("Cadastro Encontrado:")
+                    st.write(aluno)
+                else:
+                    st.error("CPF não encontrado.")
+            except FileNotFoundError:
+                st.error("Nenhum aluno cadastrado encontrado.")
+            except pd.errors.EmptyDataError:
+                st.warning("O arquivo de cadastros está vazio.")
+        else:
+            st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+
+    if st.session_state["dados_aluno"] is not None:
+        dados_aluno = st.session_state["dados_aluno"]
+
+        novo_nome = st.text_input("Novo Nome Completo", value=dados_aluno["Nome Completo"])
+        nova_data_nascimento = st.text_input("Nova Data de Nascimento (dd/mm/aaaa)", value=dados_aluno["Data de Nascimento"])
+        novo_email = st.text_input("Novo Email", value=dados_aluno["Email"])
+        novo_cep = st.text_input("Novo CEP (apenas números, 8 dígitos)", value=dados_aluno["CEP"])
+        novo_numero = st.text_input("Novo Número", value=dados_aluno["Número"])
+        novo_complemento = st.text_input("Novo Complemento", value=dados_aluno["Complemento"])
+
+        if st.button("Salvar Alterações"):
+            if validar_nome_completo(novo_nome) and validar_data_nascimento(nova_data_nascimento) and validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
+                endereco_info = get_address_info(novo_cep)
+                if endereco_info:
+                    cidade = endereco_info.get("localidade", "")
+                    rua = endereco_info.get("logradouro", "")
+                    bairro = endereco_info.get("bairro", "")
+                    dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
+                    atualizar_dados_csv(cpf, dados_atualizados)
+                    st.success("Cadastro atualizado com sucesso!")
+                    st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
+                else:
+                    st.error("CEP inválido ou não encontrado.")
             else:
-                st.error("CPF não encontrado.")
-        except FileNotFoundError:
-            st.error("Nenhum aluno cadastrado encontrado.")
-        except pd.errors.EmptyDataError:
-            st.warning("O arquivo de cadastros está vazio.")
-    elif not validar_cpf(cpf) and buscar:
-        st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+                st.error("Dados inválidos. Verifique o nome completo, a data de nascimento, o CEP, o email e o número.")
 
 # Função de excluir cadastro
 def excluir_cadastro_view():
