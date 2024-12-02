@@ -144,7 +144,7 @@ def visualizar_alunos():
 # Função de alterar cadastro
 def alterar_cadastro():
     st.header("Alterar Cadastro")
-    cpf = st.text_input("Digite o CPF do aluno para alterar (apenas números, 11 dígitos)")
+    cpf = st.text_input("Digite o CPF do aluno para alterar (apenas números e no formato xxx.xxx.xxx-xx)")
 
     if "dados_aluno" not in st.session_state:
         st.session_state["dados_aluno"] = None
@@ -167,7 +167,7 @@ def alterar_cadastro():
         except pd.errors.EmptyDataError:
             st.warning("O arquivo de cadastros está vazio.")
     elif buscar:
-        st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+        st.error("CPF inválido. Deve conter apenas números e no formato xxx.xxx.xxx-xx .")
 
     if st.session_state["dados_aluno"] is not None:
         dados_aluno = st.session_state["dados_aluno"]
