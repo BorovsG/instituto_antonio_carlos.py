@@ -116,7 +116,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro em erros:
+            for erro in erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, numero, complemento]
