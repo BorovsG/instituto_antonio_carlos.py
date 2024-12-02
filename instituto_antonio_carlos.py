@@ -186,6 +186,7 @@ def excluir_cadastro_view():
                 st.error("CPF não encontrado.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+
 def exibir_cursos():
     st.header("Cursos Disponíveis")
     cursos = {
