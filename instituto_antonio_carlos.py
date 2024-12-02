@@ -272,11 +272,17 @@ def exibir_cursos():
 
 def main():
     st.title("Instituto Antonio Carlos")
-    menu = ["Tela Inicial", "Criar Cadastro", "Visualizar Alunos", "Alterar Cadastro", "Excluir Cadastro", "Cursos Disponíveis"]
+    menu = ["Tela Inicial", "Criar Cadastro", "Visualizar Alunos", "Alterar Cadastro", "Excluir Cadastro", "Cursos Disponíveis", "Sair do App"]
     escolha = st.sidebar.selectbox("Menu", menu)
 
     if escolha == "Tela Inicial":
-        st.subheader("Bem-vindo ao Instituto Antonio Carlos! Selecione uma opção no menu ao lado para começar.")
+        st.subheader("Bem-vindo ao Instituto Antonio Carlos!")
+        st.write(
+            """
+            O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.
+            """
+        )
+        st.write("Selecione uma opção no menu ao lado para começar.")
     elif escolha == "Criar Cadastro":
         criar_cadastro()
     elif escolha == "Visualizar Alunos":
@@ -287,8 +293,13 @@ def main():
         excluir_cadastro_view()
     elif escolha == "Cursos Disponíveis":
         exibir_cursos()
+    elif escolha == "Sair do App":
+        st.subheader("Obrigado por escolher o Instituto Antonio Carlos!")
+        st.stop()
 
 if __name__ == '__main__':
     main()
+
+
 
 
