@@ -215,6 +215,8 @@ def alterar_cadastro():
                 st.success("Cadastro atualizado com sucesso!")
                 st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
 
+
+
 # Função de excluir cadastro
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
@@ -223,41 +225,77 @@ def excluir_cadastro_view():
         if validar_cpf(cpf):
             if excluir_cadastro(cpf):
                 st.success("Cadastro excluído com sucesso!")
+                st.experimental_rerun()  # Atualiza a página após excluir o cadastro
             else:
                 st.error("CPF não encontrado.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
-# Função de exibir cursos disponíveis
 def exibir_cursos():
     st.header("Cursos Disponíveis")
     cursos = {
-        "Saúde": ["Medicina", "Enfermagem", "Fisioterapia"],
-        "Tecnologia": ["Engenharia da Computação", "Ciência da Computação", "Sistemas de Informação"],
-        "Humanas": ["Direito", "Psicologia", "Administração"]
+        "Saúde": {
+            "Medicina": [
+                "Anatomia Humana", "Fisiologia", "Farmacologia", "Patologia", "Clínica Médica", "Cirurgia Geral"
+            ],
+            "Odontologia": [
+                "Anatomia Dentária", "Periodontia", "Endodontia", "Prótese Dentária", "Radiologia Odontológica", "Cirurgia Buco-maxilo-facial"
+            ]
+        },
+        "Tecnologia": {
+            "Análise e Desenvolvimento de Sistemas": [
+                "Algoritmos e Programação", "Estrutura de Dados", "Desenvolvimento Web", "Banco de Dados", "Engenharia de Software", "Redes de Computadores"
+            ]
+        },
+        "Ciências Humanas": {
+            "Direito": [
+                "Direito Constitucional", "Direito Penal", "Direito Civil", "Direito Empresarial", "Direito Trabalhista", "Direito Internacional"
+            ],
+            "Psicologia": [
+                "Teorias da Personalidade", "Psicologia do Desenvolvimento", "Psicopatologia", "Psicologia Social", "Neuropsicologia", "Psicoterapia"
+            ]
+        },
+        "Ciências Sociais": {
+            "Administração": [
+                "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
+            ]
+        }
     }
 
-    for area, cursos_disponiveis in cursos.items():
-        st.subheader(area)
-        for curso in cursos_disponiveis:
-            st.write(curso)
+    for area, cursos_area in cursos.items():
+        with st.expander(f"Área: {area}"):
+            for curso, aulas in cursos_area.items():
+                if st.button(f"Curso: {curso}"):
+                    st.write("**Aulas**:")
+                    for aula in aulas:
+                        st.write(f"- {aula}")
 
 def main():
-    st.title("Instituto Antonio Carlos")
-    menu = ["Criar Cadastro", "Visualizar Alunos", "Alterar Cadastro", "Excluir Cadastro", "Cursos Disponíveis"]
+    st.title("INSTITUTO ANTONIO CARLOS")
+    st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
+
+    menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Excluir Cadastro", "Acessar Cursos", "Sair"]
     escolha = st.sidebar.selectbox("Menu", menu)
 
-    if escolha == "Criar Cadastro":
+    if escolha == "Início":
+        st.subheader("Bem-vindo ao Instituto Antonio Carlos!")
+    elif escolha == "Criar Cadastro":
         criar_cadastro()
-    elif escolha == "Visualizar Alunos":
+    elif escolha == "Aluno Existente":
         visualizar_alunos()
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Excluir Cadastro":
         excluir_cadastro_view()
-    elif escolha == "Cursos Disponíveis":
-        exibir_cursos()
+    elif escolha == "Acessar Cursos":
+        if st.session_state.get("cadastrado", False):
+            exibir_cursos()
+        else:
+            st.warning("Por favor, realize o cadastro primeiro para acessar os cursos.")
+    elif escolha == "Sair":
+        st.subheader("Obrigado por usar o sistema!")
+        st.stop()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
