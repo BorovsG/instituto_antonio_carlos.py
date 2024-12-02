@@ -148,23 +148,27 @@ def alterar_cadastro():
                 if not aluno.empty:
                     st.write("Cadastro Encontrado:")
                     st.write(aluno)
-                    novo_cep = st.text_input("Novo CEP (apenas números, 8 dígitos)", value=aluno["CEP"].values[0])
+                    novo_nome = st.text_input("Novo Nome Completo", value=aluno["Nome Completo"].values[0])
+                    nova_data_nascimento = st.text_input("Nova Data de Nascimento (dd/mm/aaaa)", value=aluno["Data de Nascimento"].values[0])
                     novo_email = st.text_input("Novo Email", value=aluno["Email"].values[0])
+                    novo_cep = st.text_input("Novo CEP (apenas números, 8 dígitos)", value=aluno["CEP"].values[0])
                     novo_numero = st.text_input("Novo Número", value=aluno["Número"].values[0])
                     novo_complemento = st.text_input("Novo Complemento", value=aluno["Complemento"].values[0])
                     if st.button("Salvar Alterações"):
-                        if validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
+                        if validar_nome_completo(novo_nome) and validar_data_nascimento(nova_data_nascimento) and validar_cep(novo_cep) and validar_email(novo_email) and novo_numero.isnumeric():
                             endereco_info = get_address_info(novo_cep)
                             if endereco_info:
                                 cidade = endereco_info.get("localidade", "")
                                 rua = endereco_info.get("logradouro", "")
                                 bairro = endereco_info.get("bairro", "")
-                                dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, aluno["Data de Nascimento"].values[0], novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
+                                dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
                                 st.experimental_rerun()  # Atualiza a página após salvar as alterações
+                            else:
+                                st.error("CEP inválido ou não encontrado.")
                         else:
-                            st.error("Dados inválidos. Verifique o CEP, o email e o número.")
+                            st.error("Dados inválidos. Verifique o nome completo, a data de nascimento, o CEP, o email e o número.")
                 else:
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
@@ -173,6 +177,7 @@ def alterar_cadastro():
                 st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+
 
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
