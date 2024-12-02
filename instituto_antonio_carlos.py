@@ -102,7 +102,7 @@ def criar_cadastro():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro in erros:
+            for erro em erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
@@ -114,10 +114,15 @@ def visualizar_alunos():
     st.header("Alunos Cadastrados")
     try:
         df = pd.read_csv("cadastros.csv", header=None)
-        df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
-        st.dataframe(df)
+        if df.empty:
+            st.warning("Nenhum aluno cadastrado encontrado.")
+        else:
+            df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+            st.dataframe(df)
     except FileNotFoundError:
         st.error("Nenhum aluno cadastrado encontrado.")
+    except pd.errors.EmptyDataError:
+        st.warning("O arquivo de cadastros está vazio.")
 
 def alterar_cadastro():
     st.header("Alterar Cadastro")
@@ -152,6 +157,8 @@ def alterar_cadastro():
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
                 st.error("Nenhum aluno cadastrado encontrado.")
+            except pd.errors.EmptyDataError:
+                st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
@@ -193,7 +200,7 @@ def exibir_cursos():
             ]
         },
         "Ciências Sociais": {
-            "Administração": [
+            "Administração": 
                 "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
             ]
         }
