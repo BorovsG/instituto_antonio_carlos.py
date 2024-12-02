@@ -202,9 +202,7 @@ def exibir_cursos():
         "Ciências Sociais": {
             "Administração": [
                 "Introdução à Administração", "Marketing", "Gestão de Pessoas", "Contabilidade", "Finanças Empresariais", "Planejamento Estratégico"
-            ]
-       
-}
+              ] }
 }
 
 for area, cursos_area in cursos.items():
@@ -243,6 +241,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-    
