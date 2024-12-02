@@ -222,7 +222,7 @@ def alterar_cadastro():
 # Função de excluir cadastro
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
-    cpf = st.text_input("Digite o CPF do aluno para excluir (apenas números, 11 dígitos)")
+    cpf = st.text_input("Digite o CPF do aluno para excluir (apenas números e op formato xxx.xxx.xxx-xx.)")
     if st.button("Excluir"):
         if validar_cpf(cpf):
             if excluir_cadastro(cpf):
@@ -231,7 +231,7 @@ def excluir_cadastro_view():
             else:
                 st.error("CPF não encontrado.")
         else:
-            st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+            st.error("CPF inválido. Deve conter apenas números e op formato xxx.xxx.xxx-xx.")
 
 # Função de exibir cursos disponíveis
 def exibir_cursos():
