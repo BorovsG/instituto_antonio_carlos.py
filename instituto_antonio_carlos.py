@@ -231,7 +231,7 @@ def excluir_cadastro_view():
             else:
                 st.error("CPF não encontrado.")
         else:
-            st.error("CPF inválido. Deve conter apenas números e op formato xxx.xxx.xxx-xx.")
+            st.error("CPF inválido. Deve conter apenas números e no formato xxx.xxx.xxx-xx.")
 
 # Função de exibir cursos disponíveis
 def exibir_cursos():
