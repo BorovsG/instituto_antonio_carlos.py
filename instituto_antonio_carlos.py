@@ -246,7 +246,7 @@ def exibir_cursos():
             "Humanas": ["Direito", "Psicologia", "Administração"]
         }
 
-        for area, cursos_disponiveis em cursos.items():
+        for area, cursos_disponiveis in cursos.items():
             st.subheader(area)
             for curso in cursos_disponiveis:
                 st.write(curso)
