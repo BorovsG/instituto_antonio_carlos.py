@@ -114,7 +114,7 @@ def criar_cadastro():
         if not validar_nome_completo(nome_completo):
             erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
         if not validar_cpf(cpf):
-            erros.append("CPF deve conter apenas números e ter 11 dígitos.")
+            erros.append("CPF deve estar no formato xxx.xxx.xxx-xx.")
         if not validar_email(email):
             erros.append("Email inválido.")
         if not validar_data_nascimento(data_nascimento):
