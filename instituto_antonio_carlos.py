@@ -214,7 +214,7 @@ def alterar_cadastro():
                 atualizar_dados_csv(cpf, dados_atualizados)
                 st.success("Cadastro atualizado com sucesso!")
                 st.session_state["dados_aluno"] = None  # Limpa os dados do aluno
-                st.experimental_rerun()
+
 
 
 # Função de excluir cadastro
