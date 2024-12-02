@@ -97,7 +97,7 @@ def criar_cadastro():
         else:
             st.error("CEP deve conter apenas números e ter 8 dígitos.")
 
-    numero = st.text_input("Numero")
+    numero = st.text_input("Número")
     complemento = st.text_input("Complemento")
 
     if st.button("Enviar"):
@@ -112,14 +112,14 @@ def criar_cadastro():
             erros.append("Data de nascimento inválida ou você é menor de idade.")
         if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
-        if not número.isnumeric():
+        if not numero.isnumeric():
             erros.append("Número deve conter apenas números.")
 
         if erros:
             for erro in erros:
                 st.error(erro)
         else:
-            dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, número, complemento]
+            dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, numero, complemento]
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
