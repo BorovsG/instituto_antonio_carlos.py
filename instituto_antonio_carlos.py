@@ -3,6 +3,7 @@ import requests
 import re
 import csv
 import pandas as pd
+from datetime import datetime
 
 def get_address_info(cep):
     response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
@@ -23,6 +24,14 @@ def validar_email(email):
 
 def validar_cep(cep):
     return cep.isnumeric() and len(cep) == 8
+
+def validar_data_nascimento(data_nascimento):
+    try:
+        data = datetime.strptime(data_nascimento, '%d/%m/%Y')
+        ano_atual = datetime.now().year
+        return 1900 <= data.year <= 2024 and (ano_atual - data.year) >= 18
+    except ValueError:
+        return False
 
 def salvar_dados_csv(dados):
     with open("cadastros.csv", mode="a", newline="") as file:
@@ -65,6 +74,7 @@ def criar_cadastro():
     nome_completo = st.text_input("Nome Completo (deve conter apenas letras e espaço para sobrenome)")
     cpf = st.text_input("CPF (apenas números, 11 dígitos)")
     email = st.text_input("Email")
+    data_nascimento = st.text_input("Data de Nascimento (dd/mm/aaaa)")
     cep = st.text_input("CEP (apenas números, 8 dígitos)")
 
     cep_valido = False
@@ -96,6 +106,8 @@ def criar_cadastro():
             erros.append("CPF deve conter apenas números e ter 11 dígitos.")
         if not validar_email(email):
             erros.append("Email inválido.")
+        if not validar_data_nascimento(data_nascimento):
+            erros.append("Data de nascimento inválida ou você é menor de idade.")
         if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
         if not numero.isnumeric():
@@ -105,7 +117,7 @@ def criar_cadastro():
             for erro in erros:
                 st.error(erro)
         else:
-            dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
+            dados = [nome_completo, cpf, email, data_nascimento, cep, cidade, rua, bairro, numero, complemento]
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
@@ -116,7 +128,7 @@ def visualizar_alunos():
         if df.empty:
             st.warning("Nenhum aluno cadastrado encontrado.")
         else:
-            df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+            df.columns = ["Nome Completo", "CPF", "Email", "Data de Nascimento", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
             st.dataframe(df)
     except FileNotFoundError:
         st.error("Nenhum aluno cadastrado encontrado.")
@@ -130,7 +142,7 @@ def alterar_cadastro():
         if validar_cpf(cpf):
             try:
                 df = pd.read_csv("cadastros.csv", header=None)
-                df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+                df.columns = ["Nome Completo", "CPF", "Email", "Data de Nascimento", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
                 aluno = df[df["CPF"].astype(str) == cpf]  # Convertendo a coluna CPF para string e comparando
                 if not aluno.empty:
                     st.write("Cadastro Encontrado:")
@@ -146,7 +158,7 @@ def alterar_cadastro():
                                 cidade = endereco_info.get("localidade", "")
                                 rua = endereco_info.get("logradouro", "")
                                 bairro = endereco_info.get("bairro", "")
-                                dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
+                                dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, aluno["Data de Nascimento"].values[0], novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
                                 st.experimental_rerun()  # Atualiza a página após salvar as alterações
