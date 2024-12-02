@@ -109,15 +109,19 @@ def criar_cadastro():
             salvar_dados_csv(dados)
             st.session_state["cadastrado"] = True
             st.success("Cadastro realizado com sucesso!")
-
 def visualizar_alunos():
     st.header("Alunos Cadastrados")
     try:
         df = pd.read_csv("cadastros.csv", header=None)
-        df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
-        st.dataframe(df)
+        if df.empty:
+            st.warning("Nenhum aluno cadastrado encontrado.")
+        else:
+            df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
+            st.dataframe(df)
     except FileNotFoundError:
         st.error("Nenhum aluno cadastrado encontrado.")
+    except pd.errors.EmptyDataError:
+        st.warning("O arquivo de cadastros está vazio.")
 
 def alterar_cadastro():
     st.header("Alterar Cadastro")
@@ -145,12 +149,15 @@ def alterar_cadastro():
                                 dados_atualizados = [aluno["Nome Completo"].values[0], cpf, novo_email, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
+                                st.experimental_rerun()  # Atualiza a página após salvar as alterações
                         else:
                             st.error("Dados inválidos. Verifique o CEP, o email e o número.")
                 else:
                     st.error("CPF não encontrado.")
             except FileNotFoundError:
                 st.error("Nenhum aluno cadastrado encontrado.")
+            except pd.errors.EmptyDataError:
+                st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
 
@@ -161,6 +168,7 @@ def excluir_cadastro_view():
         if validar_cpf(cpf):
             if excluir_cadastro(cpf):
                 st.success("Cadastro excluído com sucesso!")
+                st.experimental_rerun()  # Atualiza a página após excluir o cadastro
             else:
                 st.error("CPF não encontrado.")
         else:
@@ -196,16 +204,17 @@ def exibir_cursos():
             ]
         }
     }
-    
+
     for area, cursos_area in cursos.items():
         with st.expander(f"Área: {area}"):
             for curso, aulas in cursos_area.items():
-                if st.button(f"Curso: {curso}"):
+                with st.expander(f"Curso: {curso}"):
                     st.write("**Aulas**:")
                     for aula in aulas:
                         st.write(f"- {aula}")
 
 def main():
+    st.title("INSTITUTO ANTONIO CARLOS")
     st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
 
     menu = ["Início", "Criar Cadastro", "Aluno Existente", "Alterar Cadastro", "Excluir Cadastro", "Acessar Cursos", "Sair"]
@@ -220,7 +229,7 @@ def main():
     elif escolha == "Alterar Cadastro":
         alterar_cadastro()
     elif escolha == "Excluir Cadastro":
-        excluir_cadastro()
+        excluir_cadastro_view()
     elif escolha == "Acessar Cursos":
         if st.session_state.get("cadastrado", False):
             exibir_cursos()
@@ -232,3 +241,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+ 
