@@ -97,7 +97,7 @@ def criar_cadastro():
         else:
             st.error("CEP deve conter apenas números e ter 8 dígitos.")
 
-    numero = st.text_input("Número")
+    numero = st.text_input("Numero")
     complemento = st.text_input("Complemento")
 
     if st.button("Enviar"):
