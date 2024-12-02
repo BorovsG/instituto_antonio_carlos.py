@@ -193,7 +193,7 @@ def alterar_cadastro():
                 erros.append("Número deve conter apenas números.")
 
             if erros:
-                for erro em erros:
+                for erro in erros:
                     st.error(erro)
             else:
                 if novo_cep != dados_aluno["CEP"]:
