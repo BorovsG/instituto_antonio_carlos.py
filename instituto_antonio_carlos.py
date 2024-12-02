@@ -51,7 +51,6 @@ def atualizar_dados_csv(cpf, dados_atualizados):
         writer = csv.writer(file)
         writer.writerows(linhas)
 
-
 def excluir_cadastro(cpf):
     linhas = []
     cpf_encontrado = False
@@ -178,9 +177,6 @@ def alterar_cadastro():
                 st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
-
-
-
 
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
