@@ -6,14 +6,6 @@ import pandas as pd
 from datetime import datetime
 
 # Funções auxiliares de validação e busca de endereço
-import streamlit as st
-import requests
-import re
-import csv
-import pandas as pd
-from datetime import datetime
-
-# Funções auxiliares de validação e busca de endereço
 def get_address_info(cep):
     response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
     if response.status_code == 200:
