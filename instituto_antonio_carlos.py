@@ -205,7 +205,7 @@ def alterar_cadastro():
                     else:
                         st.error("CEP inválido ou não encontrado.")
                         return
-                    else:
+                else:
                     cidade = dados_aluno["Cidade"]
                     rua = dados_aluno["Rua"]
                     bairro = dados_aluno["Bairro"]
