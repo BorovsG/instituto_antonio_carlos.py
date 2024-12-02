@@ -196,7 +196,7 @@ def alterar_cadastro():
                     st.error(erro)
             else:
                 endereco_info = get_address_info(novo_cep) if novo_cep != dados_aluno["CEP"] else {"localidade": dados_aluno["Cidade"], "logradouro": dados_aluno["Rua"], "bairro": dados_aluno["Bairro"]}
-                if endereco_info or novo_cep == dados_aluno["CEP"]:
+                if endereco_info:
                     cidade = endereco_info.get("localidade", dados_aluno["Cidade"])
                     rua = endereco_info.get("logradouro", dados_aluno["Rua"])
                     bairro = endereco_info.get("bairro", dados_aluno["Bairro"])
@@ -207,7 +207,6 @@ def alterar_cadastro():
                     st.experimental_rerun()
                 else:
                     st.error("CEP inválido ou não encontrado.")
-
 
 
 # Função de excluir cadastro
