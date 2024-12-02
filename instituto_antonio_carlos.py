@@ -87,15 +87,15 @@ def criar_cadastro():
             erros.append("Nome completo deve conter apenas letras e espaço para sobrenome.")
         if not validar_cpf(cpf):
             erros.append("CPF deve conter apenas números e ter 11 dígitos.")
-        if não validar_email(email):
+        if not validar_email(email):
             erros.append("Email inválido.")
-        if não cep_valido:
+        if not cep_valido:
             erros.append("CEP inválido ou não preenchido.")
-        if não numero.isnumeric():
+        if not numero.isnumeric():
             erros.append("Número deve conter apenas números.")
 
         if erros:
-            for erro em erros:
+            for erro in erros:
                 st.error(erro)
         else:
             dados = [nome_completo, cpf, email, cep, cidade, rua, bairro, numero, complemento]
@@ -120,7 +120,7 @@ def alterar_cadastro():
             try:
                 df = pd.read_csv("cadastros.csv", header=None)
                 df.columns = ["Nome Completo", "CPF", "Email", "CEP", "Cidade", "Rua", "Bairro", "Número", "Complemento"]
-                aluno = df[df["CPF"] == int(cpf)]  # Converter CPF para inteiro
+                aluno = df[df["CPF"].astype(str) == cpf]  # Convertendo a coluna CPF para string e comparando
                 if not aluno.empty:
                     st.write("Cadastro Encontrado:")
                     st.write(aluno)
@@ -198,7 +198,6 @@ def exibir_cursos():
                     st.write("**Aulas**:")
                     for aula in aulas:
                         st.write(f"- {aula}")
-
 def main():
     st.title("INSTITUTO ANTONIO CARLOS")
     st.subheader("O Instituto Antônio Carlos é uma iniciativa de Gabriel Borovina, Victor Sasaki e Felipe Gomes que nasceu com o objetivo de democratizar o acesso ao conhecimento de qualidade. Através de cursos EAD inovadores e personalizados, oferecemos aos estudantes as ferramentas e o suporte necessários para alcançar seus objetivos acadêmicos. Nosso compromisso é simplificar a jornada de aprendizado, proporcionando uma experiência flexível e eficaz.")
