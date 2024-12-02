@@ -164,7 +164,6 @@ def alterar_cadastro():
                                 dados_atualizados = [novo_nome, cpf, novo_email, nova_data_nascimento, novo_cep, cidade, rua, bairro, novo_numero, novo_complemento]
                                 atualizar_dados_csv(cpf, dados_atualizados)
                                 st.success("Cadastro atualizado com sucesso!")
-                                st.experimental_rerun()  # Atualiza a página após salvar as alterações
                             else:
                                 st.error("CEP inválido ou não encontrado.")
                         else:
@@ -177,6 +176,7 @@ def alterar_cadastro():
                 st.warning("O arquivo de cadastros está vazio.")
         else:
             st.error("CPF inválido. Deve conter apenas números e ter 11 dígitos.")
+
 
 def excluir_cadastro_view():
     st.header("Excluir Cadastro")
